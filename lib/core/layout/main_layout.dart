@@ -39,10 +39,10 @@ class _MainLayoutState extends State<MainLayout> {
       notificationService.loadNotifications();
     }
     Future<void> setUser() async{
-      final result = await authService.getRole();
+      final result = await authService.getRole(); 
       setState(() {
         user = result.data;
-        role = user!['role'];
+        role = user!['role'][0].toUpperCase() + user!['role'].substring(1).toLowerCase();
         name = user!['username'];
       });
 
@@ -60,6 +60,10 @@ class _MainLayoutState extends State<MainLayout> {
           Navigator.pushReplacementNamed(context, '/system');
           break;
         case 3:
+          // await authService.logout();          
+          Navigator.pushReplacementNamed(context, '/available');
+          break;
+        case 4:
           await authService.logout();          
           Navigator.pushReplacementNamed(context, '/login');
           break;
@@ -111,7 +115,27 @@ class _MainLayoutState extends State<MainLayout> {
                       title: Text('Asset Management System', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),),
                       backgroundColor: const Color.fromARGB(255, 99, 122, 250),
                       foregroundColor: Colors.white38,
-                      actions: [Text("$role:  $name ", style: TextStyle(color: Colors.white))],
+                      actions: [
+                        Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircleAvatar(
+                              radius: 16,
+                              backgroundColor: Colors.white24,
+                              child: const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text("$role:  $name", style: TextStyle(color: Colors.white)),
+                          ],
+                          ),
+                        ),
+                      ],
                     ),
           body: Row(
             
@@ -120,6 +144,7 @@ class _MainLayoutState extends State<MainLayout> {
               Sidebar(
                 selectedIndex: widget.selectedIndex,
                 onSelect: onTabSelected,
+                role: role,
               ),
 
               Expanded(

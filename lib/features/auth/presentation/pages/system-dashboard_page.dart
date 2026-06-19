@@ -54,11 +54,19 @@ class _SystemDashboardPageState extends State<SystemDashboardPage> {
     }
     @override
     Widget build(BuildContext context) {
-        final totalAssets = stats!['total_assets'] ?? 0;
-        final assignedAssets = stats!['assigned_assets'] ?? 0;
-        final maintenanceAssets = stats!['under_maintenance'] ?? 0;
-        final totalValue = stats!['totalvalue'] ?? 0;
-        final categories = stats!['cat_Array'].length;
+        if (stats == null) {
+          return MainLayout(
+            selectedIndex: 0,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        final totalAssets = stats?['total_assets'] ?? 0;
+        final assignedAssets = stats?['assigned_assets'] ?? 0;
+        final maintenanceAssets = stats?['under_maintenance'] ?? 0;
+        final totalValue = stats?['totalvalue'] ?? 0;
+        final categories = stats?['cat_Array']?.length ?? 0;
         
         return MainLayout(
           selectedIndex: 2,

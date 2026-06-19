@@ -5,7 +5,8 @@ class ApiClient {
   ApiClient() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://127.0.0.1:8000/api',
+        // baseUrl: 'http://127.0.0.1:8000/api',
+        baseUrl: 'http://localhost/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -17,14 +18,4 @@ class ApiClient {
     dio.interceptors.add(AuthInterceptor());
     
   }
-  // Future<void> getHttp() async {
-  //   try {
-  //   final response = await dio.get('/assets/allstats');
-  //   print(response.data);
-  // } catch (e, stackTrace) {
-  //   print('ERROR: $e');
-  //   print(stackTrace);
-  //   rethrow;
-  // }
-  // } 
 }

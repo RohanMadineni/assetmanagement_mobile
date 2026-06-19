@@ -33,4 +33,8 @@ class AssetService {
     final response = await apiClient.dio.get('/assets');
     return response;
   }
+  Future<Response> getAllAssets() async {
+    final response = await apiClient.dio.get('/assets/all');
+    return response;
+  }
 }

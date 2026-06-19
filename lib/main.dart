@@ -3,6 +3,7 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/dashboard_page.dart';
 import 'features/auth/presentation/pages/asset-list.dart';
 import 'features/auth/presentation/pages/system-dashboard_page.dart';
+import 'features/auth/presentation/pages/available-assets.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // runApp(MainApp(apiClient: ApiClient()),);
@@ -15,6 +16,7 @@ void main() async {
         '/dashboard': (context) => const DashboardPage(),
         '/assets': (context) => const AssetListPage(),
         '/system': (context) => const SystemDashboardPage(),
+        '/available' :(context) => const AvailableAssetListPage(),
       }, 
     )
   );

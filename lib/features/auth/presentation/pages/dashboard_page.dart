@@ -19,6 +19,11 @@ class _DashboardPageState extends State<DashboardPage> {
     bool loadingWarranties = true;
     bool loadingRecent = true;
     
+    // late final int totalAssets;
+    // late final int assignedAssets;
+    // late final int maintenanceAssets;
+    // late final int totalValue;
+    // late final int categories;
     @override
     void initState() {
         super.initState(); 
@@ -33,6 +38,11 @@ class _DashboardPageState extends State<DashboardPage> {
         // print(result);
         setState(() {
             stats = result.data;
+            // totalAssets = stats!['total_assets'] ?? 0;
+            // assignedAssets = stats!['assigned_assets'] ?? 0;
+            // maintenanceAssets = stats!['under_maintenance'] ?? 0;
+            // totalValue = stats!['totalvalue'] ?? 0;
+            // categories = stats!['cat_Array'].length;
         });
 
         // print(stats);
@@ -53,12 +63,19 @@ class _DashboardPageState extends State<DashboardPage> {
     }
     @override
     Widget build(BuildContext context) {
-        final totalAssets = stats!['total_assets'] ?? 0;
-        final assignedAssets = stats!['assigned_assets'] ?? 0;
-        final maintenanceAssets = stats!['under_maintenance'] ?? 0;
-        final totalValue = stats!['totalvalue'] ?? 0;
-        final categories = stats!['cat_Array'].length;
-        
+      if (stats == null) {
+        return MainLayout(
+          selectedIndex: 0,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+        final totalAssets = stats?['total_assets'] ?? 0;
+        final assignedAssets = stats?['assigned_assets'] ?? 0;
+        final maintenanceAssets = stats?['under_maintenance'] ?? 0;
+        final totalValue = stats?['totalvalue'] ?? 0;
+        final categories = stats?['cat_Array']?.length ?? 0;
         return MainLayout(
           selectedIndex: 0,
           child: Scaffold(

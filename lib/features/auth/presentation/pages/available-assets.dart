@@ -2,29 +2,39 @@ import 'package:flutter/material.dart';
 import '../../../../core/layout/main_layout.dart';
 import '../../data/services/asset_service.dart';
 import '../../../../core/network/api_client.dart';
-class AssetListPage extends StatefulWidget{
-  const AssetListPage({super.key});
+import '../../data/services/auth_service.dart';
+class AvailableAssetListPage extends StatefulWidget{
+  const AvailableAssetListPage({super.key});
 
   @override
-  State<AssetListPage> createState() => _AssetListPageState();
+  State<AvailableAssetListPage> createState() => _AvailableAssetListPageState();
 }
 
-class _AssetListPageState extends State<AssetListPage> {
+class _AvailableAssetListPageState extends State<AvailableAssetListPage> {
   late final AssetService assetService;
+  late final AuthService authService;
   List<dynamic> assets = [];
   bool loadingAssets = true;
+  String role = "";
+  Map<String, dynamic>? user;
   @override
   void initState(){
         super.initState(); 
         assetService = AssetService(
             ApiClient(),
         );
+        authService = AuthService(
+          ApiClient(),
+        );
         loadAssets();
     }
-  void loadAssets() async {
-    final result = await assetService.getAssets();
+  Future<void> loadAssets() async {
+    final result = await assetService.getAllAssets();
+    final result2 = await authService.getRole(); 
     setState(() {
       assets = List<dynamic>.from(result.data['data']);
+      user = result2.data;
+      role = user!['role'][0].toUpperCase() + user!['role'].substring(1).toLowerCase();
       loadingAssets = false;
       if(loadingAssets==false) {
         print(assets);
@@ -34,10 +44,19 @@ class _AssetListPageState extends State<AssetListPage> {
   }
   @override
   Widget build(BuildContext context) {
+
+    if(role != 'Admin'){
+      return MainLayout(
+            selectedIndex: 0,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+    }
     return MainLayout(
-      selectedIndex: 1,
+      selectedIndex: 3,
       child: Scaffold(
-        appBar: AppBar(title: const Text('Asset List')),
+        appBar: AppBar(title: const Text('Available Assets List')),
         body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
