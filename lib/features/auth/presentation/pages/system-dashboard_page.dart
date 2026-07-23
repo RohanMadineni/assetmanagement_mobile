@@ -3,6 +3,7 @@ import '../../data/services/asset_service.dart';
 import '../../../../core/network/api_client.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../../core/layout/main_layout.dart';
+import 'package:intl/intl.dart';
 class SystemDashboardPage extends StatefulWidget{
     const SystemDashboardPage({super.key});
     @override
@@ -65,7 +66,7 @@ class _SystemDashboardPageState extends State<SystemDashboardPage> {
         final totalAssets = stats?['total_assets'] ?? 0;
         final assignedAssets = stats?['assigned_assets'] ?? 0;
         final maintenanceAssets = stats?['under_maintenance'] ?? 0;
-        final totalValue = stats?['totalvalue'] ?? 0;
+        final totalValue = NumberFormat('#,##0.00').format(stats?['totalvalue'] ?? 0);
         final categories = stats?['cat_Array']?.length ?? 0;
         
         return MainLayout(
@@ -80,7 +81,7 @@ class _SystemDashboardPageState extends State<SystemDashboardPage> {
                                         crossAxisCount: 2,
                                         shrinkWrap: true,
                                         physics: const NeverScrollableScrollPhysics(),
-                                        childAspectRatio: 2,
+                                        childAspectRatio: 1.6,
                                         crossAxisSpacing: 12,
                                         mainAxisSpacing: 12,
                                         children: [
@@ -93,33 +94,52 @@ class _SystemDashboardPageState extends State<SystemDashboardPage> {
                                     ),
                                     // const SizedBox(height: 20),
                                     
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: Column(
-                                            children: [
-                                              warrantyTable(),
-                                              const SizedBox(height: 16),
-                                              recentlyAssignedTable(),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          flex:1,
-                                          child: Column(
-                                            children: [
-                                              categoryChart(),
-                                              const SizedBox(width: 12),
-                                              statusChart(),
-                                            ],
-                                          ),
-                                        ),
-                                        
-                                      ],
-                                    ),
+                                    LayoutBuilder(
+  builder: (context, constraints) {
+    final isWide = constraints.maxWidth >= 900;
+
+    if (isWide) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                warrantyTable(),
+                const SizedBox(height: 16),
+                recentlyAssignedTable(),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 16),
+
+          Expanded(
+            child: Column(
+              children: [
+                categoryChart(),
+                const SizedBox(height: 12),
+                statusChart(),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        warrantyTable(),
+        const SizedBox(height: 16),
+        recentlyAssignedTable(),
+        const SizedBox(height: 16),
+        categoryChart(),
+        const SizedBox(height: 12),
+        statusChart(),
+      ],
+    );
+  },
+)
                                 ],
                             ),
                         ),
@@ -130,32 +150,52 @@ class _SystemDashboardPageState extends State<SystemDashboardPage> {
 
     Widget statCard(String title, String value, IconData icon, Color color) {
         return Card(
-            elevation: 3,
-            child: Padding(
+          elevation: 3,
+          child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-                Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                    Text(title, style: const TextStyle(fontSize: 12)),
-                    const SizedBox(height: 6),
-                    Text(
-                    value,
-                    style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                    ),
-                    ),
-                ],
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          value,
+                          maxLines: 1,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Icon(icon, color: color, size: 30),
-            ],
+
+                const SizedBox(width: 8),
+
+                Icon(
+                  icon,
+                  color: color,
+                  size: 30,
+                ),
+              ],
             ),
-        ),
-    );
+          ),
+        );
     }   
 
     Widget categoryChart(){
@@ -227,17 +267,17 @@ class _SystemDashboardPageState extends State<SystemDashboardPage> {
                           PieChartData(
                             sections: [
                               PieChartSectionData(
-                                value: stats!['assigned_assets'],
+                                value: stats!['assigned_assets'].toDouble(),
                                 title: 'Assigned',
                                 color: Colors.amberAccent
                               ),
                               PieChartSectionData(
-                                value: stats!['unassigned_assets'],
+                                value: stats!['unassigned_assets'].toDouble(),
                                 title: 'Available',
                                 color: Colors.greenAccent
                               ),
                               PieChartSectionData(
-                                value: stats!['under_maintenance'],
+                                value: stats!['under_maintenance'].toDouble(),
                                 title: 'Under Maintenance',
                                 color: Colors.deepPurpleAccent
                               ),

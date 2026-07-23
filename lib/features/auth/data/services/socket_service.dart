@@ -11,7 +11,7 @@ class SocketService extends ChangeNotifier{
 
   void connect(int userId) {
     socket = IO.io(
-      'http://localhost:3000',
+      'http://localhost',
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .setQuery({

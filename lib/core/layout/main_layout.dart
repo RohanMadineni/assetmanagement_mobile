@@ -19,6 +19,7 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   
     int currentPageIndex = 0;
+    bool isSidebarExtended = false;
     Map<String, dynamic>? user;
     String role = "";
     String name = "";
@@ -112,7 +113,20 @@ class _MainLayoutState extends State<MainLayout> {
           ],
         ),
         appBar: AppBar(
-                      title: Text('Asset Management System', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),),
+                      leading: IconButton(
+                      icon: Icon(
+                        isSidebarExtended
+                            ? Icons.menu_open
+                            : Icons.menu,
+                      ),
+
+                      onPressed: () {
+                        setState(() {
+                          isSidebarExtended = !isSidebarExtended;
+                        });
+                      },
+                    ),
+                      title: Text('Asset System', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),),
                       backgroundColor: const Color.fromARGB(255, 99, 122, 250),
                       foregroundColor: Colors.white38,
                       actions: [
@@ -145,6 +159,7 @@ class _MainLayoutState extends State<MainLayout> {
                 selectedIndex: widget.selectedIndex,
                 onSelect: onTabSelected,
                 role: role,
+                extended: isSidebarExtended,
               ),
 
               Expanded(

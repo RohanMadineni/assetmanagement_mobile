@@ -5,19 +5,37 @@ class Sidebar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onSelect;
   final String role;
+  final bool extended;
   const Sidebar({
     super.key,
     required this.selectedIndex,
     required this.onSelect,
     required this.role,
+    required this.extended,
   });
 
   @override
   Widget build(BuildContext context) {
-    return NavigationRail(
+    return AnimatedContainer(
+  duration: const Duration(milliseconds: 250),
+  width: extended ? 220 : 72,
+      
+    child: NavigationRail(
       selectedIndex: selectedIndex,
       onDestinationSelected: onSelect,
-      labelType: NavigationRailLabelType.all,
+      // labelType: NavigationRailLabelType.all,
+      // This controls whether labels are visible
+      extended: extended,
+
+      // Makes the rail width more predictable
+      labelType: NavigationRailLabelType.none,
+      // minWidth: 72,
+      // minExtendedWidth: 220,
+      
+
+      // labelType: extended
+      //     ? NavigationRailLabelType.none
+      //     : NavigationRailLabelType.all,
       destinations: [
         NavigationRailDestination(
           icon: Icon(Icons.dashboard_outlined),
@@ -47,6 +65,6 @@ class Sidebar extends StatelessWidget {
           label: Text('Logout'),
         ),
       ],
-    );
+    ),);
   }
 }
