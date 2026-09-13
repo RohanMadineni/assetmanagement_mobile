@@ -81,6 +81,7 @@ class _DashboardPageState extends State<DashboardPage> {
           selectedIndex: 0,
           child: Scaffold(
                 appBar: AppBar(title: const Text('Dashboard')),
+        // return Scaffold(
                 body: SingleChildScrollView(
                             padding: EdgeInsets.all(16),
                             child: Column(
@@ -207,9 +208,16 @@ class _DashboardPageState extends State<DashboardPage> {
     }   
 
     Widget categoryChart(){
-      final catNames = Map<String, dynamic>.from(stats!['catNames']);
-      final catArray = Map<String, dynamic>.from(stats!['cat_Array']);
-      final colors = [
+      final catNames = stats!['catNames'];
+      final Map<dynamic, dynamic> catArray = stats!['cat_Array'];
+      
+      // final catNames = Map<String, dynamic>.from(stats!['catNames']);
+      // final catArray = Map<String, dynamic>.from(stats!['cat_Array']);
+      // final catNames = Map<String, dynamic>.from(stats!['catNames']);
+      // final catArray = Map<String, dynamic>.from(stats!['cat_Array']);
+      // final catNames = Map<String, dynamic>.fromEntries(stats!['catNames']);
+      // final catArray = Map<String, dynamic>.fromEntries(stats!['cat_Array']);
+       final colors = [
         Colors.greenAccent,
         Colors.amberAccent,
         Colors.lightBlueAccent,

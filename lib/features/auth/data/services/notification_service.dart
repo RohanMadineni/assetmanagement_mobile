@@ -4,13 +4,24 @@ import '../models/notification_model.dart';
 
 class NotificationService extends ChangeNotifier{
   final ApiClient apiClient;
-  NotificationService(this.apiClient){
-    loadNotifications();
+  // NotificationService(this.apiClient){
+  //   loadNotifications();
+  // }
+  NotificationService(this.apiClient);
+  List<AppNotification> notifications = [];
+
+  void addNotification(AppNotification notification) { 
+    print('notification added');
+    if(notification.isRead==0) {
+      notifications.insert(0, notification);
+    } 
+    else if(notification.isRead==1){
+      loadNotifications();
+    }
+    notifyListeners(); 
   }
 
-  List<AppNotification> notifications = [];
-   
-   Future<void> loadNotifications() async {
+  Future<void> loadNotifications() async {
     final response =
         await apiClient.dio.get('/notifications');
 
@@ -44,6 +55,7 @@ class NotificationService extends ChangeNotifier{
     notifyListeners();
   }
 
-  int get unreadCount =>
-      notifications.where((n) => n.isRead == 0).length;
+  // int get unreadCount =>
+  //     notifications.where((n) => n.isRead == 0).length;
+  int get unreadCount { return notifications.where((notification) => notification.isRead == 0).length; }
 }

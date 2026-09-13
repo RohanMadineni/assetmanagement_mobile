@@ -21,7 +21,7 @@ class AppNotification {
       title: json['title'],
       message: json['message'],
       type: json['type'],
-      isRead: json['is_read'],
+      isRead: json['is_read'] == true || json['is_read'] == 1 ? 1 : 0,
       createdAt: json['created_at'],
     );
   }
