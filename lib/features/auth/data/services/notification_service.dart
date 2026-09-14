@@ -4,21 +4,30 @@ import '../models/notification_model.dart';
 
 class NotificationService extends ChangeNotifier{
   final ApiClient apiClient;
-  // NotificationService(this.apiClient){
-  //   loadNotifications();
-  // }
+
   NotificationService(this.apiClient);
   List<AppNotification> notifications = [];
 
   void addNotification(AppNotification notification) { 
-    print('notification added');
-    if(notification.isRead==0) {
+    print('notification added: ${notification}');
+    // if(notification.isRead==0) {
+    //   notifications.insert(0, notification);
+    //   notifyListeners();
+    // } 
+    // else {
+    //   markAsReadLocally(notification.id);
+    // }
+    final index = notifications.indexWhere(
+      (n)=>n.id == notification.id,
+    );
+
+    if (index == -1) {
       notifications.insert(0, notification);
-    } 
-    else if(notification.isRead==1){
-      loadNotifications();
+    } else {
+      notifications[index] = notification;
     }
-    notifyListeners(); 
+    
+    notifyListeners();
   }
 
   Future<void> loadNotifications() async {
@@ -38,6 +47,10 @@ class NotificationService extends ChangeNotifier{
       '/notifications/$id',
     );
 
+    markAsReadLocally(id);
+  }
+
+  void markAsReadLocally(int id) {
     final index =
         notifications.indexWhere((n) => n.id == id);
 
@@ -54,8 +67,5 @@ class NotificationService extends ChangeNotifier{
 
     notifyListeners();
   }
-
-  // int get unreadCount =>
-  //     notifications.where((n) => n.isRead == 0).length;
   int get unreadCount { return notifications.where((notification) => notification.isRead == 0).length; }
 }

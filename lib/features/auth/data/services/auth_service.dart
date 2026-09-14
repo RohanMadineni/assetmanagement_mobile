@@ -12,7 +12,6 @@ class AuthService {
   Future<Response> login({required String username, required String password}) async {
     final response = await apiClient.dio.post('/auth/login', data: {"username": username, "password" : password});
     await _saveSession(response.data);
-    // print(await TokenStorage.getToken());
     return response;
   }
   Future<void> logout() async {
@@ -47,8 +46,4 @@ class AuthService {
     final response = await ApiClient().dio.get('/auth/role');
     return response;
   }
-  // Future<void> getHttp() async {
-  
-  //   await apiClient.getHttp();
-  // } 
 }

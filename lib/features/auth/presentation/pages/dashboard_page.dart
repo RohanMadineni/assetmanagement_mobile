@@ -19,12 +19,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
     bool loadingWarranties = true;
     bool loadingRecent = true;
-    
-    // late final int totalAssets;
-    // late final int assignedAssets;
-    // late final int maintenanceAssets;
-    // late final int totalValue;
-    // late final int categories;
+
     @override
     void initState() {
         super.initState(); 
@@ -36,24 +31,14 @@ class _DashboardPageState extends State<DashboardPage> {
     }
     Future<void> loadStats() async{
         final result = await assetService.getStats();
-        // print(result);
         setState(() {
             stats = result.data;
-            // totalAssets = stats!['total_assets'] ?? 0;
-            // assignedAssets = stats!['assigned_assets'] ?? 0;
-            // maintenanceAssets = stats!['under_maintenance'] ?? 0;
-            // totalValue = stats!['totalvalue'] ?? 0;
-            // categories = stats!['cat_Array'].length;
         });
-
-        // print(stats);
     }
     
     Future<void> loadData() async {
       final warranties = await assetService.getUpcomingAssets();
       final recent = await assetService.getRecentlyAssignedAssets();
-      // print(warranties.data);
-      // print(recent.data );
       setState(() {
         upcomingWarranties = List<dynamic>.from(warranties.data['data']);
         recentlyAssigned = List<dynamic>.from(recent.data['data']);
@@ -80,8 +65,7 @@ class _DashboardPageState extends State<DashboardPage> {
         return MainLayout(
           selectedIndex: 0,
           child: Scaffold(
-                appBar: AppBar(title: const Text('Dashboard')),
-        // return Scaffold(
+                appBar: AppBar(automaticallyImplyLeading: false, title: const Text('Dashboard')),
                 body: SingleChildScrollView(
                             padding: EdgeInsets.all(16),
                             child: Column(
@@ -101,54 +85,53 @@ class _DashboardPageState extends State<DashboardPage> {
                                             statCard("Total Value", "QAR $totalValue", Icons.attach_money, Colors.green),
                                         ],
                                     ),
-                                    // const SizedBox(height: 20),
                                     
                                     LayoutBuilder(
-  builder: (context, constraints) {
-    final isWide = constraints.maxWidth >= 900;
+                                      builder: (context, constraints) {
+                                        final isWide = constraints.maxWidth >= 900;
 
-    if (isWide) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                warrantyTable(),
-                const SizedBox(height: 16),
-                recentlyAssignedTable(),
-              ],
-            ),
-          ),
+                                        if (isWide) {
+                                          return Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    warrantyTable(),
+                                                    const SizedBox(height: 16),
+                                                    recentlyAssignedTable(),
+                                                  ],
+                                                ),
+                                              ),
 
-          const SizedBox(width: 16),
+                                              const SizedBox(width: 16),
 
-          Expanded(
-            child: Column(
-              children: [
-                categoryChart(),
-                const SizedBox(height: 12),
-                statusChart(),
-              ],
-            ),
-          ),
-        ],
-      );
-    }
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    categoryChart(),
+                                                    const SizedBox(height: 12),
+                                                    statusChart(),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }
 
-    return Column(
-      children: [
-        warrantyTable(),
-        const SizedBox(height: 16),
-        recentlyAssignedTable(),
-        const SizedBox(height: 16),
-        categoryChart(),
-        const SizedBox(height: 12),
-        statusChart(),
-      ],
-    );
-  },
-)
+                                        return Column(
+                                          children: [
+                                            warrantyTable(),
+                                            const SizedBox(height: 16),
+                                            recentlyAssignedTable(),
+                                            const SizedBox(height: 16),
+                                            categoryChart(),
+                                            const SizedBox(height: 12),
+                                            statusChart(),
+                                          ],
+                                        );
+                                      },
+                                    )
                                 ],
                             ),
                         ),
@@ -210,13 +193,6 @@ class _DashboardPageState extends State<DashboardPage> {
     Widget categoryChart(){
       final catNames = stats!['catNames'];
       final Map<dynamic, dynamic> catArray = stats!['cat_Array'];
-      
-      // final catNames = Map<String, dynamic>.from(stats!['catNames']);
-      // final catArray = Map<String, dynamic>.from(stats!['cat_Array']);
-      // final catNames = Map<String, dynamic>.from(stats!['catNames']);
-      // final catArray = Map<String, dynamic>.from(stats!['cat_Array']);
-      // final catNames = Map<String, dynamic>.fromEntries(stats!['catNames']);
-      // final catArray = Map<String, dynamic>.fromEntries(stats!['cat_Array']);
        final colors = [
         Colors.greenAccent,
         Colors.amberAccent,

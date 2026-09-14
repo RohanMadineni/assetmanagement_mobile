@@ -72,7 +72,7 @@ class _SystemDashboardPageState extends State<SystemDashboardPage> {
         return MainLayout(
           selectedIndex: 2,
           child: Scaffold(
-                appBar: AppBar(title: const Text('System Dashboard')),
+                appBar: AppBar(automaticallyImplyLeading: false, title: const Text('System Dashboard')),
                 body: SingleChildScrollView(
                             padding: EdgeInsets.all(16),
                             child: Column(
